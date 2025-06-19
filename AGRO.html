@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Proyecto: AgroTrace AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Earthy Tech (Greens, Blues, Warm Neutrals) -->
+    <!-- Application Structure Plan: Se ha diseñado una SPA (Single Page Application) con un flujo narrativo. Comienza con una sección de impacto (problema/solución), seguida de un dashboard interactivo central que permite explorar Objetivos, Cronograma, Costos y el Plan (WBS) a través de un sistema de pestañas. Esta estructura fue elegida para presentar la información de forma no lineal, permitiendo al usuario profundizar en el área de su interés sin perder el contexto general del proyecto, mejorando la usabilidad y la asimilación de la información clave. -->
+    <!-- Visualization & Content Choices: 1) Problema: Tarjetas con iconos para impacto visual. 2) Objetivos: Gráficos de dona de Chart.js para visualizar KPIs porcentuales de forma dinámica. 3) Cronograma: Gráfico de barras horizontales (simulando un Gantt) de Chart.js para una vista clara de las fases. 4) Costos: Gráfico de dona de Chart.js para la distribución y una tabla HTML para el detalle. 5) WBS: Lista colapsable (acordeón) con JS para una navegación limpia. Se eligieron estos métodos por su claridad, interactividad y por cumplir la restricción de NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .objective-chart-container {
+            position: relative;
+            width: 100%;
+            height: 150px;
+        }
+        .tab-active {
+            background-color: #16a34a; /* green-600 */
+            color: white;
+            border-color: #16a34a; /* green-600 */
+        }
+        .tab-inactive {
+            background-color: white;
+            color: #374151; /* gray-700 */
+            border-color: #d1d5db; /* gray-300 */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-green-700">AgroTrace AI</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#problema" class="text-gray-600 hover:text-green-700">El Desafío</a>
+                <a href="#solucion" class="text-gray-600 hover:text-green-700">La Solución</a>
+                <a href="#dashboard" class="text-gray-600 hover:text-green-700">Dashboard</a>
+                <a href="#equipo" class="text-gray-600 hover:text-green-700">Detalles</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-gray-800 leading-tight">
+                    <span class="text-green-700">Revolucionando</span> la Exportación de Fruta Chilena
+                </h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+                    Una plataforma integral con IA y Blockchain para una cadena de suministro transparente, eficiente y confiable.
+                </p>
+                <a href="#dashboard" class="mt-8 inline-block bg-green-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-green-700 transition-transform transform hover:scale-105">Explorar el Proyecto</a>
+            </div>
+        </section>
+
+        <section id="problema" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">El Desafío de la Industria</h2>
+                 <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">La industria de exportación de fruta chilena enfrenta desafíos críticos que amenazan su competitividad. Identificamos cuatro áreas clave que requieren una solución innovadora para asegurar el crecimiento y la sostenibilidad en los mercados globales.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-red-500">
+                        <h3 class="font-bold text-xl mb-2">Falta de Trazabilidad</h3>
+                        <p class="text-gray-600">La desconfianza en los mercados internacionales aumenta debido a la falta de un sistema verificable sobre el origen y manejo del producto.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+                        <h3 class="font-bold text-xl mb-2">Ineficiencia Logística</h3>
+                        <p class="text-gray-600">Coordinación manual y fragmentada que provoca retrasos, quiebres en la cadena de frío y pérdidas millonarias.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                        <h3 class="font-bold text-xl mb-2">Barreras Regulatorias</h3>
+                        <p class="text-gray-600">La gestión manual de complejas normativas fitosanitarias por mercado es propensa a errores que resultan en rechazos costosos.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                        <h3 class="font-bold text-xl mb-2">Asimetría de Información</h3>
+                        <p class="text-gray-600">Productores pequeños y medianos carecen de acceso a datos de mercado en tiempo real para tomar decisiones óptimas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solucion" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Nuestra Solución: AgroTrace AI</h2>
+                 <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">AgroTrace AI es una plataforma digital SaaS que responde directamente a los desafíos de la industria. A través de la tecnología, transformamos la cadena de suministro en una ventaja competitiva.</p>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-gray-50 p-8 rounded-lg">
+                        <h3 class="font-bold text-2xl text-green-700 mb-3">¿Qué es?</h3>
+                        <p>Una plataforma unificada que digitaliza y automatiza todo el proceso de exportación, desde el huerto hasta el consumidor.</p>
+                    </div>
+                    <div class="bg-green-600 text-white p-8 rounded-lg shadow-xl scale-105">
+                        <h3 class="font-bold text-2xl mb-3">¿Qué resuelve?</h3>
+                        <p>Elimina la opacidad, optimiza la logística, asegura el cumplimiento normativo y reduce drásticamente las pérdidas de producto.</p>
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-lg">
+                        <h3 class="font-bold text-2xl text-green-700 mb-3">¿Qué logra?</h3>
+                        <p>Aumenta la confianza del consumidor, abre nuevos mercados premium, y mejora la rentabilidad de los productores chilenos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-4">Dashboard del Proyecto</h2>
+                <p class="text-center text-gray-600 mb-12 max-w-4xl mx-auto">Explore los componentes clave del plan de proyecto de AgroTrace AI. Utilice las pestañas para navegar entre los objetivos, el cronograma de actividades, la distribución de costos y el plan de trabajo detallado.</p>
+                
+                <div class="mb-8 flex flex-wrap justify-center gap-2 md:gap-4">
+                    <button class="tab-button tab-active" data-tab="objetivos">Objetivos</button>
+                    <button class="tab-button tab-inactive" data-tab="cronograma">Cronograma</button>
+                    <button class="tab-button tab-inactive" data-tab="costos">Costos</button>
+                    <button class="tab-button tab-inactive" data-tab="wbs">Plan de Trabajo (WBS)</button>
+                </div>
+
+                <div class="bg-white p-4 sm:p-8 rounded-lg shadow-lg">
+                    <div id="objetivos-content" class="tab-content">
+                        <h3 class="text-2xl font-bold text-center mb-8">Objetivos Específicos y KPIs</h3>
+                        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div class="text-center">
+                                <div class="objective-chart-container"><canvas id="docTimeChart"></canvas></div>
+                                <h4 class="font-bold mt-2">Reducir Tiempo Documental</h4>
+                                <p class="text-green-600 font-bold text-2xl">30%</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="objective-chart-container"><canvas id="lossReductionChart"></canvas></div>
+                                <h4 class="font-bold mt-2">Disminuir Pérdidas</h4>
+                                <p class="text-green-600 font-bold text-2xl">15%</p>
+                            </div>
+                            <div class="text-center">
+                               <div class="objective-chart-container"><canvas id="traceabilityChart"></canvas></div>
+                                <h4 class="font-bold mt-2">Trazabilidad Blockchain</h4>
+                                <p class="text-green-600 font-bold text-2xl">100%</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="objective-chart-container"><canvas id="dataAccessChart"></canvas></div>
+                                <h4 class="font-bold mt-2">Aumentar Acceso a Datos</h4>
+                                <p class="text-green-600 font-bold text-2xl">20%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cronograma-content" class="tab-content hidden">
+                        <h3 class="text-2xl font-bold text-center mb-8">Cronograma de Actividades (26 Semanas)</h3>
+                        <div class="chart-container"><canvas id="ganttChart"></canvas></div>
+                    </div>
+                    <div id="costos-content" class="tab-content hidden">
+                        <h3 class="text-2xl font-bold text-center mb-8">Estimación de Costos (Total: $115,000 USD)</h3>
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="w-full md:w-1/3 h-64"><canvas id="costChart"></canvas></div>
+                            <div class="w-full md:w-2/3">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full bg-white">
+                                        <thead class="bg-gray-100">
+                                            <tr>
+                                                <th class="py-2 px-4 text-left">Ítem</th>
+                                                <th class="py-2 px-4 text-right">Subtotal (USD)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="costsTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="wbs-content" class="tab-content hidden">
+                         <h3 class="text-2xl font-bold text-center mb-8">Work Breakdown Structure (WBS)</h3>
+                         <div id="wbs-container" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="equipo" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Detalles Clave del Proyecto</h2>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Análisis 5W+1H</h3>
+                         <ul class="space-y-4">
+                            <li><strong class="text-green-700 w-20 inline-block">Qué?:</strong> Plataforma SaaS ("AgroTrace AI") con IA y Blockchain.</li>
+                            <li><strong class="text-green-700 w-20 inline-block">Por qué?:</strong> Para aumentar la transparencia, eficiencia y confianza en la exportación de fruta.</li>
+                            <li><strong class="text-green-700 w-20 inline-block">Quién?:</strong> Productores, exportadores, logística, importadores y reguladores.</li>
+                            <li><strong class="text-green-700 w-20 inline-block">Cuándo?:</strong> Proyecto de 6 meses (26 semanas) para el MVP, iniciando Q3 2025.</li>
+                            <li><strong class="text-green-700 w-20 inline-block">Dónde?:</strong> Plataforma web y app móvil, operando desde la nube.</li>
+                            <li><strong class="text-green-700 w-20 inline-block">Cómo?:</strong> Usando Scrum, con sprints de 2 semanas, enfocados en un MVP inicial.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-6">Principales Interesados (Stakeholders)</h3>
+                        <div class="space-y-3">
+                            <p class="p-3 bg-gray-100 rounded-md"><strong>Productores y Exportadores:</strong> Usuarios principales que buscan mejorar su rentabilidad.</p>
+                            <p class="p-3 bg-gray-100 rounded-md"><strong>Importadores y Retailers:</strong> Necesitan garantizar la calidad y trazabilidad del producto.</p>
+                            <p class="p-3 bg-gray-100 rounded-md"><strong>Empresas de Logística:</strong> Se integran para optimizar despachos y rutas.</p>
+                            <p class="p-3 bg-gray-100 rounded-md"><strong>SAG y Aduanas:</strong> Pueden usar la plataforma para agilizar inspecciones.</p>
+                            <p class="p-3 bg-gray-100 rounded-md"><strong>Consumidores Finales:</strong> Escanean un QR para conocer la historia de su fruta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold text-xl">AgroTrace AI</p>
+            <p class="text-gray-400 mt-2">Innovación para un agro más conectado y sostenible. &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const projectData = {
+            costs: [
+                { item: 'Gestión de Proyecto', cost: 18000, color: '#16a34a' },
+                { item: 'Desarrollo de Software', cost: 54000, color: '#15803d' },
+                { item: 'Diseño UX/UI', cost: 4000, color: '#166534' },
+                { item: 'Consultoría Blockchain', cost: 12000, color: '#a3e635' },
+                { item: 'Infraestructura (Cloud+IoT)', cost: 9000, color: '#65a30d' },
+                { item: 'Capacitación y Marketing', cost: 3000, color: '#4d7c0f' },
+                { item: 'Contingencia (15%)', cost: 15000, color: '#d1d5db' },
+            ],
+            gantt: [
+                { label: 'Investigación y Diseño', start: 1, end: 4, color: '#3b82f6' },
+                { label: 'Desarrollo del MVP', start: 5, end: 16, color: '#16a34a' },
+                { label: 'Pruebas y Validación', start: 17, end: 20, color: '#f97316' },
+                { label: 'Lanzamiento y Capacitación', start: 21, end: 24, color: '#8b5cf6' },
+                { label: 'Cierre y Monitoreo', start: 25, end: 26, color: '#ef4444' },
+            ],
+            wbs: [
+                { phase: '1. Gestión del Proyecto', tasks: ['Definición de Alcance y Objetivos', 'Planificación de Sprints y Cronograma', 'Asignación del Equipo (PO, SM, Devs)', 'Gestión de Riesgos y Seguimiento'] },
+                { phase: '2. Investigación y Diseño', tasks: ['Entrevistas con Stakeholders', 'Mapeo del Proceso de Exportación Actual', 'Diseño de Arquitectura (IA, Blockchain)', 'Diseño UX/UI y Wireframes'] },
+                { phase: '3. Desarrollo del MVP', tasks: ['Módulo de Registro de Productores y Lotes', 'Módulo de Trazabilidad (Blockchain)', 'Módulo de Sensores IoT', 'Módulo de IA para Cumplimiento', 'Dashboard de Monitoreo'] },
+                { phase: '4. Pruebas y Validación', tasks: ['Pruebas Unitarias y de Integración', 'Pruebas de Aceptación (UAT)', 'Ajustes y Correcciones'] },
+                { phase: '5. Lanzamiento y Capacitación', tasks: ['Implementación en Cloud', 'Capacitación a clientes', 'Creación de Manuales y Soporte'] },
+                { phase: '6. Cierre y Monitoreo', tasks: ['Evaluación de KPIs del MVP', 'Planificación de Roadmap futuro', 'Lecciones Aprendidas'] }
+            ]
+        };
+
+        const createDoughnutChart = (canvasId, value, label, color) => {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [label, 'Restante'],
+                    datasets: [{
+                        data: [value, 100 - value],
+                        backgroundColor: [color, '#e5e7eb'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        };
+
+        const createObjectiveCharts = () => {
+            createDoughnutChart('docTimeChart', 30, 'Reducción', '#3b82f6');
+            createDoughnutChart('lossReductionChart', 15, 'Disminución', '#f97316');
+            createDoughnutChart('traceabilityChart', 100, 'Trazabilidad', '#16a34a');
+            createDoughnutChart('dataAccessChart', 20, 'Aumento', '#8b5cf6');
+        }
+
+        let ganttChart, costChart;
+        const createGanttChart = () => {
+            const ctx = document.getElementById('ganttChart').getContext('2d');
+            const data = {
+                labels: projectData.gantt.map(p => p.label),
+                datasets: [{
+                    label: 'Semanas',
+                    data: projectData.gantt.map(p => [p.start, p.end]),
+                    backgroundColor: projectData.gantt.map(p => p.color),
+                    borderWidth: 1,
+                    borderColor: '#ffffff',
+                    barPercentage: 0.6,
+                }]
+            };
+            ganttChart = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const d = context.raw;
+                                    return `Semanas: ${d[0]} - ${d[1]}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 28,
+                            title: { display: true, text: 'Semanas del Proyecto' }
+                        }
+                    }
+                }
+            });
+        };
+
+        const createCostChart = () => {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            costChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: projectData.costs.map(c => c.item),
+                    datasets: [{
+                        data: projectData.costs.map(c => c.cost),
+                        backgroundColor: projectData.costs.map(c => c.color),
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+
+            const tableBody = document.getElementById('costsTableBody');
+            projectData.costs.forEach(item => {
+                const row = `
+                    <tr class="border-b">
+                        <td class="py-2 px-4">${item.item}</td>
+                        <td class="py-2 px-4 text-right font-mono">$${item.cost.toLocaleString('en-US')}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+            const totalRow = `
+                <tr class="font-bold bg-gray-100">
+                    <td class="py-2 px-4">TOTAL ESTIMADO</td>
+                    <td class="py-2 px-4 text-right font-mono">$115,000</td>
+                </tr>
+            `;
+            tableBody.innerHTML += totalRow;
+        };
+        
+        const createWBS = () => {
+            const container = document.getElementById('wbs-container');
+            projectData.wbs.forEach(item => {
+                const phaseDiv = document.createElement('div');
+                phaseDiv.className = 'border border-gray-200 rounded-lg';
+
+                const phaseButton = document.createElement('button');
+                phaseButton.className = 'w-full p-4 text-left font-bold bg-gray-100 hover:bg-gray-200 flex justify-between items-center';
+                phaseButton.innerHTML = `<span>${item.phase}</span> <span class="transform transition-transform duration-300">&#9662;</span>`;
+                
+                const tasksDiv = document.createElement('div');
+                tasksDiv.className = 'hidden p-4 border-t border-gray-200';
+                
+                const taskList = document.createElement('ul');
+                taskList.className = 'list-disc list-inside space-y-1 text-gray-700';
+                item.tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.textContent = task;
+                    taskList.appendChild(li);
+                });
+
+                tasksDiv.appendChild(taskList);
+                phaseDiv.appendChild(phaseButton);
+                phaseDiv.appendChild(tasksDiv);
+                
+                phaseButton.addEventListener('click', () => {
+                    tasksDiv.classList.toggle('hidden');
+                    phaseButton.querySelector('span:last-child').classList.toggle('rotate-180');
+                });
+                
+                container.appendChild(phaseDiv);
+            });
+        };
+
+        const tabs = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+
+                tabs.forEach(t => {
+                    t.classList.remove('tab-active');
+                    t.classList.add('tab-inactive');
+                });
+                tab.classList.add('tab-active');
+                tab.classList.remove('tab-inactive');
+
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(`${target}-content`).classList.remove('hidden');
+            });
+        });
+
+        const initCharts = () => {
+            createObjectiveCharts();
+            createGanttChart();
+            createCostChart();
+            createWBS();
+        }
+        
+        initCharts();
+
+    });
+    </script>
+</body>
+</html>
